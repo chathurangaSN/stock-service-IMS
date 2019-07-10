@@ -14,9 +14,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class DraftDetails {
 
-//	@Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Integer id;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id;
 //    
 //    @NotNull(message = "valid item information")
 //    @Min(value = 1 ,message="valid item information")
@@ -37,13 +37,13 @@ public class DraftDetails {
     @JsonIgnore
     DraftLog draftLog;
 
-//	public Integer getId() {
-//		return id;
-//	}
-//
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 //
 //	public Integer getItemId() {
 //		return itemId;

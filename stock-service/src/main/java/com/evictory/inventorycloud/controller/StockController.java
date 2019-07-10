@@ -47,12 +47,13 @@ public class StockController {
 																				// details
 	public ResponseEntity<?> saveAll(@Valid @RequestBody DraftLog draftLog) {
 
-		draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
-		if (stockService.saveAll(draftLog)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-		}
+		return stockService.saveAll(draftLog);
+
+//		if () {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
+//		}
 
 	}
 
@@ -60,45 +61,51 @@ public class StockController {
 																			// stock details
 	public ResponseEntity<?> fetchAll() {
 
-		System.out.println("Insude the get method");
-		List<DraftLog> openStocks = stockService.fetchAll();
-		if (openStocks == null || openStocks.size() == 0) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-		} else {
-			return ResponseEntity.ok(openStocks);
-		}
+		return stockService.fetchAll();
+
+//		System.out.println("Insude the get method");
+//		List<DraftLog> openStocks = stockService.fetchAll();
+//		if (openStocks == null || openStocks.size() == 0) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
+//		} else {
+//			return ResponseEntity.ok(openStocks);
+//		}
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry", method = RequestMethod.POST) // create a new Draft log only
 	public ResponseEntity<?> saveEntry(@RequestBody DraftLog draftLog) {
 
-		draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
-		if (stockService.saveEntry(draftLog)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-		}
+		return stockService.saveEntry(draftLog);
+//
+//		draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
+//		if (stockService.saveEntry(draftLog)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
+//		}
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry/{id}", method = RequestMethod.PUT) // update existing Draft details
 																						// entry
 	public ResponseEntity<?> updateEntry(@PathVariable Integer id, @RequestBody DraftLog draftLog) { // open Draft log
 																										// id
-
-		if (stockService.updateEntry(id, draftLog)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
-		}
+		return stockService.updateEntry(id, draftLog);
+//
+//		if (stockService.updateEntry(id, draftLog)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
+//		}
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry/{id}", method = RequestMethod.GET) // fetch a Draft log by id
 	public ResponseEntity<?> fetchEntry(@PathVariable Integer id) {
-		DraftLog draftLog = stockService.fetchEntry(id);
-		if (draftLog == null) {
-			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
-		}
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftLog);
+
+		return stockService.fetchEntry(id);
+//		if (draftLog == null) {
+//			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
+//		}
+//		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftLog);
 
 	}
 

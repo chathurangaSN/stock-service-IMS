@@ -25,8 +25,9 @@ public class Stock {
     
     @NotNull(message = "valid user information")
     @Min(value = 1 ,message="valid user information")
+    Integer authorizedUserId;
+
     Integer userId;
-    
     
     @NotNull
     @Size(min=1, message="a reason for the entry log")
@@ -57,6 +58,14 @@ public class Stock {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Integer getAuthorizedUserId() {
+		return authorizedUserId;
+	}
+
+	public void setAuthorizedUserId(Integer authorizedUserId) {
+		this.authorizedUserId = authorizedUserId;
 	}
 
 	public String getReason() {

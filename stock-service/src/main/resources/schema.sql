@@ -14,14 +14,14 @@ create table CurrentStock (
         primary key (id)
     ); 
 create table DraftDetails (
-       
+        id integer not null auto_increment,
        	batchId varchar(255) not null,
 	itemCode varchar(255) not null,
        
         quantity double precision not null,
         
         OSid integer,
-     
+      primary key (id)
     ); 
 create table DraftLog (
        id integer not null auto_increment,

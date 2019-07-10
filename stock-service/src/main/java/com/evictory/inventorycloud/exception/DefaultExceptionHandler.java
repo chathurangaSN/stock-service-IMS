@@ -42,10 +42,10 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler{
 	  }
 	 
 //	 @ExceptionHandler(RuntimeException.class)
-//	  public final ResponseEntity<?> integerNotFound(IntegerNotPassedException ex) {
+//	  public final DraftLogResponseEntity<?> integerNotFound(IntegerNotPassedException ex) {
 //		 ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), responseFailed);
 //		 
-//	    return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+//	    return new DraftLogResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 //	  }
 	 
 	 public class ErrorMessage {

@@ -1,34 +1,23 @@
 package com.evictory.inventorycloud.service;
 
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
-import org.aspectj.apache.bcel.classfile.Module.Open;
+import com.evictory.inventorycloud.modal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.evictory.inventorycloud.exception.MessageBodyConstraintViolationException;
-import com.evictory.inventorycloud.modal.DraftLog;
-import com.evictory.inventorycloud.modal.Stock;
-import com.evictory.inventorycloud.modal.StockDetails;
-import com.evictory.inventorycloud.modal.TransactionDetails;
-import com.evictory.inventorycloud.modal.TransactionLog;
-import com.evictory.inventorycloud.modal.DraftDetails;
 import com.evictory.inventorycloud.repository.CurrentStockRepository;
 import com.evictory.inventorycloud.repository.DraftDetailsRepository;
 import com.evictory.inventorycloud.repository.DraftLogRepository;
@@ -53,52 +42,76 @@ public class StockServiceImpl implements StockService {
 	@Autowired
 	CurrentStockRepository currentStockRepository;
 
+	@Autowired
+	ResponseValues responseValues;
+
+	@Autowired
+	ResponseMessages responseMessages;
+
+	@Autowired
+	DraftLogListResponseEntity draftLogListResponseEntity;
+
+	@Autowired
+	DraftLogResponseEntity draftLogResponseEntity;
+
+
 	@Override
-	public Boolean saveAll(DraftLog draftLog) { // save all stock details with log
-	
+	public ResponseEntity<?> saveAll(DraftLog draftLog) { // save all stock details with log
+
 		if (draftLog == null) {
 			throw new MessageBodyConstraintViolationException("Response body is empty");
 		} else {
-			List<DraftDetails> details = draftLog.getDraftDetails();
-//			for (int i = 0; i < details.size(); i++) {
-//				if (details.get(i).getItemId() == null || details.get(i).getQuantity() == null) {
-////						|| details.get(i).getBrandId() == null || details.get(i).getUomId() == null) {
-//					throw new MessageBodyConstraintViolationException("Please provide all open stock details.");
-//				} else if (details.get(i).getItemId() < 1 ) {
-//						
-////				|| details.get(i).getBrandId() < 1 || details.get(i).getUomId() < 1) {
-//					throw new MessageBodyConstraintViolationException("Please provide all open stock details.");
-//				}
-//			}
-			System.out.println("Get user name " + draftLog.getUserId());
+			draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
 			for (DraftDetails draftDetails : draftLog.getDraftDetails()) {
 				draftDetails.setDraftLog(draftLog);
-				System.out.println("dasf" + draftLog.getDraftDetails());
 			}
 			draftLogRepository.save(draftLog);
-			return true;
+
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPOST());
+			responseValues.setCode("#0000001");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
 		}
 	}
 
 	@Override
-	public List<DraftLog> fetchAll() { // get all stock details with log
-		
-		return draftLogRepository.findAll();
+	public ResponseEntity<?> fetchAll() { // get all stock details with log
+
+		List<DraftLog> logs = draftLogRepository.findAll();
+		if(logs== null || logs.toString().equals("[]")){
+			responseValues.setStatus(responseMessages.getResponseFailed());
+			responseValues.setMessage(responseMessages.getMessageFailedGET());
+			responseValues.setCode("#1200000");
+			return new ResponseEntity<>(responseValues,HttpStatus.BAD_REQUEST);
+		}else {
+			draftLogListResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			draftLogListResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			draftLogListResponseEntity.setCode("#0000002");
+			draftLogListResponseEntity.setDraftLogs(logs);
+			return new ResponseEntity<>(draftLogListResponseEntity,HttpStatus.ACCEPTED);
+		}
+
+
 	}
 
 	@Override
-	public Boolean saveEntry(DraftLog draftLog) { // save only stock log
+	public ResponseEntity<?> saveEntry(DraftLog draftLog) { // save only stock log
 
 		if (draftLog == null) {
 			throw new MessageBodyConstraintViolationException("Response body is empty");
 		} else {
+			draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
 			draftLogRepository.save(draftLog);
-			return true;
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPOST());
+			responseValues.setCode("#0000001");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
 		}
 	}
 
 	@Override
-	public Boolean updateEntry(Integer id, DraftLog draftLog) { // update stock log // pass id of stock log
+	public ResponseEntity<?> updateEntry(Integer id, DraftLog draftLog) { // update stock log // pass id of stock log
 
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
@@ -108,21 +121,31 @@ public class StockServiceImpl implements StockService {
 			update.setUserId(draftLog.getUserId().toString());
 
 			draftLogRepository.save(update);
-			return true;
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPUT());
+			responseValues.setCode("#0000003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
 	}
 
 	@Override
-	public DraftLog fetchEntry(Integer id) { // get stock log // pass id of stock log
+	public ResponseEntity<?> fetchEntry(Integer id) { // get stock log // pass id of stock log
 		
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
-			System.out.println("have");
+//			System.out.println("have");
 			Optional<DraftLog> optional = draftLogRepository.findById(id);
 			DraftLog draftLog = optional.get();
-			return draftLog;
+
+			draftLogResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			draftLogResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			draftLogResponseEntity.setCode("#0000002");
+			draftLogResponseEntity.setDraftLog(draftLog);
+			return new ResponseEntity<>(draftLogResponseEntity,HttpStatus.ACCEPTED);
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
@@ -517,7 +540,7 @@ public class StockServiceImpl implements StockService {
 //		response.setResponse("Failed");
 //		response.setMessage("Failed to withdraw from database.");
 //		
-//		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//		return DraftLogResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 	
 	class Response {

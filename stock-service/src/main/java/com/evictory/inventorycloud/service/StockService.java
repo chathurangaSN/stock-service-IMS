@@ -11,15 +11,15 @@ import com.evictory.inventorycloud.modal.DraftDetails;
 public interface StockService {
 
 
-	Boolean saveAll(DraftLog draftLog); // save all stock details with log
+	ResponseEntity<?> saveAll(DraftLog draftLog); // save all stock details with log
 
-	List<DraftLog> fetchAll(); // get all stock details with log
+	ResponseEntity<?> fetchAll(); // get all stock details with log
 
-	Boolean saveEntry(DraftLog draftLog); // save only stock log
+	ResponseEntity<?> saveEntry(DraftLog draftLog); // save only stock log
 
-	Boolean updateEntry(Integer id, DraftLog draftLog); // update stock log // pass id of stock log
+	ResponseEntity<?> updateEntry(Integer id, DraftLog draftLog); // update stock log // pass id of stock log
 
-	DraftLog fetchEntry(Integer id); // get stock log  // pass id of stock log
+	ResponseEntity<?> fetchEntry(Integer id); // get stock log  // pass id of stock log
 
 	Boolean deleteEntry(Integer id); // delete stock log  // pass id of stock log
 

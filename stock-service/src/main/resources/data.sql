@@ -1,12 +1,12 @@
 insert into DraftLog (date, reason, userId) values ("2019-01-01 09:00:00", "2019 jan openstock", 1)
-        
+
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 1, 1, "A001", 24)
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 1, 2, "A002", 24)
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 1, 3, "A003", 24)
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 1, 4, "A004", 24)
 
 insert into DraftLog (date, reason, userId) values ("2019-02-01 09:00:00", "2019  feb openstock", 1)
-        
+
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 2, 1, "A005", 24)
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 2, 2, "A006", 24)
 insert into DraftDetails ( OSid, itemCode, batchId, quantity) values ( 2, 3, "A007", 24)
