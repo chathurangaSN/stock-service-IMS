@@ -7,6 +7,7 @@ import java.util.List;
 import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
+import com.evictory.inventorycloud.modal.SaveToMasterEntity;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -197,9 +198,9 @@ public class StockController {
 	// fetch all draft log entry details and push it as a new entry to stock log and
 	// delete if existing draft log
 	@RequestMapping(value = "/openstock/master", method = RequestMethod.POST)
-	public ResponseEntity<?> saveToMaster(@RequestBody Integer id ) { // draft log id
+	public ResponseEntity<?> saveToMaster(@RequestBody SaveToMasterEntity saveToMasterEntity ) { // draft log id
 
-		return stockService.saveToMaster(id);
+		return stockService.saveToMaster(saveToMasterEntity);
 //		if (stockService.saveToMaster(id)) {
 //			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
 //		} else {
@@ -211,25 +212,29 @@ public class StockController {
 	@RequestMapping(value = "/openstock/master", method = RequestMethod.GET) // fetch all permanent added stock entries
 																				// with details
 	public ResponseEntity<?> fetchAllMaster() { // stock log id
-		List<Stock> stock = stockService.fetchAllMaster();
 
-		if (stock == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(true, "GET"));
-		} else {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-		}
+		return stockService.fetchAllMaster();
+//		List<Stock> stock = stockService.fetchAllMaster();
+//
+//		if (stock == null) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(true, "GET"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
+//		}
 
 	}
 
 	@RequestMapping(value = "/openstock/master/{id}", method = RequestMethod.GET) // fetch permanent added stock entries
 																					// with details by id
 	public ResponseEntity<?> fetchMaster(@PathVariable Integer id) { // stock log id
-		Stock stock = stockService.fetchMaster(id);
-		if (stock == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-		} else {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-		}
+
+		return stockService.fetchMaster(id);
+//		Stock stock = stockService.fetchMaster(id);
+//		if (stock == null) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
+//		}
 
 	}
 

@@ -7,4 +7,6 @@ import com.evictory.inventorycloud.modal.DraftDetails;
 
 public interface DraftDetailsRepository extends JpaRepository<DraftDetails, Integer>{
 
+
+//    void deleteAllById (Integer integer);
 }

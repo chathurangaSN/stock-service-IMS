@@ -58,6 +58,11 @@ public class StockServiceImpl implements StockService {
 	@Autowired
 	DraftDetailsListResponseEntity draftDetailsListResponseEntity;
 
+	@Autowired
+	StockListResponseEntity stockListResponseEntity;
+
+	@Autowired
+	StockResponseEntity stockResponseEntity;
 
 	@Override
 	public ResponseEntity<?> saveAll(DraftLog draftLog) { // save all stock details with log
@@ -225,10 +230,18 @@ public class StockServiceImpl implements StockService {
 		if (isExist) {
 			draftDetailsRepository.deleteById(id);
 
-			responseValues.setStatus(responseMessages.getResponseSuccess());
-			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
-			responseValues.setCode("#1200003");
-			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+			if(draftDetailsRepository.existsById(id)){
+				responseValues.setStatus(responseMessages.getResponseFailed());
+				responseValues.setMessage(responseMessages.getMessageFailedDELETE());
+				responseValues.setCode("#1200003");
+				return new ResponseEntity<>(responseValues,HttpStatus.INTERNAL_SERVER_ERROR);
+			}else {
+				responseValues.setStatus(responseMessages.getResponseSuccess());
+				responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+				responseValues.setCode("#1200003");
+				return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+			}
+
 
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock details entry not available.");
@@ -269,19 +282,27 @@ public class StockServiceImpl implements StockService {
 				optional.get().getDraftDetails().stream()
 						.forEach(draftDetails -> draftDetailsRepository.deleteById(draftDetails.getId()));
 //				for (int i = 0; i < optional.get().getDraftDetails().size(); i++) {
-////					gotId = optional.get().getDraftDetails().get(i).getId();
+//					gotId = optional.get().getDraftDetails().get(i).getId();
 //
 //					System.out.println("sdasfdfsd  " + gotId);
 //					draftDetailsRepository.deleteById(gotId);
 ////					(optional.get().getStockDetails().get(i));
 //				}
-
-
+//				draftDetailsRepository.deleteById(id);
 			}
-			responseValues.setStatus(responseMessages.getResponseSuccess());
-			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
-			responseValues.setCode("#1200003");
-			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+			Optional<DraftLog> optionalNew = draftLogRepository.findById(id);
+			if(optionalNew.get().getDraftDetails().size()>0){
+				responseValues.setStatus(responseMessages.getResponseFailed());
+				responseValues.setMessage(responseMessages.getMessageFailedDELETE());
+				responseValues.setCode("#1200003");
+				return new ResponseEntity<>(responseValues,HttpStatus.INTERNAL_SERVER_ERROR);
+			}else{
+				responseValues.setStatus(responseMessages.getResponseSuccess());
+				responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+				responseValues.setCode("#1200003");
+				return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+			}
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
@@ -321,19 +342,36 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public List<Stock> fetchAllMaster() { // fetch all permanent added stock entries with details
+	public ResponseEntity<?> fetchAllMaster() { // fetch all permanent added stock entries with details
 
-		return stockRepository.findAll();
+		List<Stock> logs = stockRepository.findAll();
+		if(logs== null || logs.toString().equals("[]")){
+			responseValues.setStatus(responseMessages.getResponseFailed());
+			responseValues.setMessage(responseMessages.getMessageFailedGET());
+			responseValues.setCode("#1200000");
+			return new ResponseEntity<>(responseValues,HttpStatus.BAD_REQUEST);
+		}else {
+			stockListResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			stockListResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			stockListResponseEntity.setCode("#0000002");
+			stockListResponseEntity.setStocks(logs);
+			return new ResponseEntity<>(stockListResponseEntity,HttpStatus.ACCEPTED);
+		}
+
 	}
 
 	@Override
-	public Stock fetchMaster(Integer id) { // fetch permanent added stock entries with details by id
+	public ResponseEntity<?> fetchMaster(Integer id) { // fetch permanent added stock entries with details by id
 
 		boolean isExist = stockRepository.existsById(id);
 		if (isExist) {
 			Optional<Stock> optional = stockRepository.findById(id);
 			Stock stock = optional.get();
-			return stock;
+			stockResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			stockResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			stockResponseEntity.setCode("#0000002");
+			stockResponseEntity.setStocks(stock);
+			return new ResponseEntity<>(stockResponseEntity,HttpStatus.ACCEPTED);
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry is not available.");
 		}

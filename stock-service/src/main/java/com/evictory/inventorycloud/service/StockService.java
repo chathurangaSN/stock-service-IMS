@@ -36,9 +36,9 @@ public interface StockService {
 
 	ResponseEntity<?> saveToMaster(SaveToMasterEntity saveToMasterEntity);  // fetch all draft log entry details and push it as a new entry to stock log and delete if existing draft log
 
-	List<Stock> fetchAllMaster(); // fetch all permanent added stock entries with details
-	
-	Stock fetchMaster(Integer id); // fetch  permanent added stock entries with details by id
+	ResponseEntity<?> fetchAllMaster(); // fetch all permanent added stock entries with details
+
+	ResponseEntity<?> fetchMaster(Integer id); // fetch  permanent added stock entries with details by id
 	
 	Stock fetchMasterLastEntry(String date); // fetch  the last entry on open stock by date 
 	
