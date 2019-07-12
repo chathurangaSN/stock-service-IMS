@@ -113,12 +113,13 @@ public class StockController {
 																							// with its details
 	public ResponseEntity<?> deleteEntry(@PathVariable Integer id) {
 
-		if (stockService.deleteEntry(id)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-		}
+		return stockService.deleteEntry(id);
+//		if (stockService.deleteEntry(id)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
+//		} else {
+//
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
+//		}
 
 	}
 
@@ -126,12 +127,13 @@ public class StockController {
 	@RequestMapping(value = "/openstock/draft/details/{id}", method = RequestMethod.POST)
 	public ResponseEntity<?> saveDetails(@PathVariable Integer id, @RequestBody DraftDetails draftDetails) {
 
-		if (stockService.saveDetails(id, draftDetails)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-		}
+		return stockService.saveDetails(id, draftDetails);
+//		if (stockService.saveDetails(id, draftDetails)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
+//		} else {
+//
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
+//		}
 	}
 
 	// update existing Draft details entry
@@ -144,46 +146,52 @@ public class StockController {
 //			id = Integer.valueOf(sid);
 //		}
 
-		if (stockService.updateDetails(id, details)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
-		}
+		return stockService.updateDetails(id, details);
+//
+//		if (stockService.updateDetails(id, details)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
+//		} else {
+//
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
+//		}
 	}
 
 	// delete existing Draft details entry
 	@RequestMapping(value = "/openstock/draft/details/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteDetails(@PathVariable Integer id) {
 
-		if (stockService.deleteDetails(id)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-		}
+		return stockService.deleteDetails(id);
+//		if (stockService.deleteDetails(id)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
+//		} else {
+//
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
+//		}
 	}
 
 	// fetch all Draft details by Draft log by id
 	@RequestMapping(value = "/openstock/draft/detailsAll/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> fetchAllDetails(@PathVariable Integer id) {
-		List<DraftDetails> draftDetails = stockService.fetchAllDetails(id);
-//		if (draftDetails == null) {
-//			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
-//		}
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftDetails);
+
+		return stockService.fetchAllDetails(id);
+//		List<DraftDetails> draftDetails = stockService.fetchAllDetails(id);
+////		if (draftDetails == null) {
+////			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
+////		}
+//		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftDetails);
 
 	}
 	// delete all details of draft details by draft log id
 	@RequestMapping(value = "/openstock/draft/detailsAll/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteAllDetails(@PathVariable Integer id) {
 
-		if (stockService.deleteAllDetails(id)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-		}
+		return stockService.deleteAllDetails(id);
+//		if (stockService.deleteAllDetails(id)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
+//		} else {
+//
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
+//		}
 	}
 
 	// fetch all draft log entry details and push it as a new entry to stock log and
@@ -191,11 +199,12 @@ public class StockController {
 	@RequestMapping(value = "/openstock/master", method = RequestMethod.POST)
 	public ResponseEntity<?> saveToMaster(@RequestBody Integer id ) { // draft log id
 
-		if (stockService.saveToMaster(id)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-		}
+		return stockService.saveToMaster(id);
+//		if (stockService.saveToMaster(id)) {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
+//		}
 
 	}
 

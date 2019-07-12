@@ -1,5 +1,7 @@
 package com.evictory.inventorycloud.exception;
 
+import com.evictory.inventorycloud.modal.ResponseMessages;
+import com.evictory.inventorycloud.modal.ResponseValues;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,13 @@ public class GlobalExceptionHandler {
 	
     @Autowired
     ExceptionResponse exceptionResponse;
+
+    @Autowired
+    ResponseValues responseValues;
+
+    @Autowired
+    ResponseMessages responseMessages;
+
     @ExceptionHandler(JsonMappingException.class)
     public ResponseEntity<ExceptionResponse> serviceExceptionHandler(JsonMappingException e){
     	
@@ -23,11 +32,11 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(MessageBodyConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponse> serviceException(MessageBodyConstraintViolationException e){
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setCode("Serialize code");
-        exceptionResponse.setData(e.toString());
-        return new ResponseEntity<>(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> serviceException(MessageBodyConstraintViolationException e){
+        responseValues.setStatus(responseMessages.getResponseSuccess());
+        responseValues.setMessage(e.getMessage());
+        responseValues.setCode("#1200003");
+        return new ResponseEntity<>(responseValues,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     

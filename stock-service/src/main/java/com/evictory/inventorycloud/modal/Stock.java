@@ -36,6 +36,20 @@ public class Stock {
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     List<StockDetails> stockDetails;
 
+	public Stock() {
+	}
+
+	public Stock(ZonedDateTime date,
+				 Integer authorizedUserId, Integer userId, String reason,
+				 List<StockDetails> stockDetails) {
+
+		this.date = date;
+		this.authorizedUserId = authorizedUserId;
+		this.userId = userId;
+		this.reason = reason;
+		this.stockDetails = stockDetails;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -83,6 +97,7 @@ public class Stock {
 	public void setStockDetails(List<StockDetails> stockDetails) {
 		this.stockDetails = stockDetails;
 	}
-    
+
+
     
 }

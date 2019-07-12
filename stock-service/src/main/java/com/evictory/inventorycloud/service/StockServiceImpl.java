@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.evictory.inventorycloud.modal.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,9 @@ public class StockServiceImpl implements StockService {
 
 	@Autowired
 	DraftLogResponseEntity draftLogResponseEntity;
+
+	@Autowired
+	DraftDetailsListResponseEntity draftDetailsListResponseEntity;
 
 
 	@Override
@@ -152,20 +156,25 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public Boolean deleteEntry(Integer id) { // delete stock log // pass id of stock log
+	public ResponseEntity<?> deleteEntry(Integer id) { // delete stock log // pass id of stock log
 		
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
 			System.out.println("have");
 			draftLogRepository.deleteById(id);
-			return true;
+
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
 	}
 
 	@Override
-	public Boolean saveDetails(Integer id, DraftDetails details) { // create stock details for respective stock log //
+	public ResponseEntity<?> saveDetails(Integer id, DraftDetails details) { // create stock details for respective stock log //
 																	// pass id of stock log
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
@@ -173,7 +182,11 @@ public class StockServiceImpl implements StockService {
 			DraftLog draftLog = optional.get();
 			details.setDraftLog(draftLog);
 			draftDetailsRepository.save(details);
-			return true;
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPOST());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
@@ -181,20 +194,24 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public Boolean updateDetails(Integer id, DraftDetails details) { // update stock details for respective stock log //
+	public ResponseEntity<?> updateDetails(Integer id, DraftDetails details) { // update stock details for respective stock log //
 																		// pass id of stock details
 		boolean isExist = draftDetailsRepository.existsById(id);
 		System.out.println("isExist" + isExist);
 		if (isExist) {
 			Optional<DraftDetails> optional = draftDetailsRepository.findById(id);
 			DraftDetails draftDetails = optional.get();
-//			draftDetails.setItemId(details.getItemId());
+			draftDetails.setBatchId(details.getBatchId());
 			draftDetails.setQuantity(details.getQuantity());
-//			draftDetails.setBrandId(details.getBrandId());
-//			draftDetails.setUomId(details.getUomId());
+			draftDetails.setItemCode(details.getItemCode());
 
 			draftDetailsRepository.save(draftDetails);
-			return true;
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPUT());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock details entry not available.");
 		}
@@ -202,19 +219,24 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public Boolean deleteDetails(Integer id) { // delete stock details // pass id of stock details
+	public ResponseEntity<?> deleteDetails(Integer id) { // delete stock details // pass id of stock details
 
 		boolean isExist = draftDetailsRepository.existsById(id);
 		if (isExist) {
 			draftDetailsRepository.deleteById(id);
-			return true;
+
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock details entry not available.");
 		}
 
 	}
 	@Override
-	public List<DraftDetails> fetchAllDetails(Integer id) { // fetch all stock details by stock log // pass id of stock details
+	public ResponseEntity<?> fetchAllDetails(Integer id) { // fetch all stock details by stock log // pass id of stock details
 		
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
@@ -222,7 +244,11 @@ public class StockServiceImpl implements StockService {
 			if (optional.isPresent()) {
 				
 				List<DraftDetails> details = optional.get().getDraftDetails();
-				return details;
+				draftDetailsListResponseEntity.setStatus(responseMessages.getResponseSuccess());
+				draftDetailsListResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+				draftDetailsListResponseEntity.setCode("#0000002");
+				draftDetailsListResponseEntity.setDraftDetails(details);
+				return new ResponseEntity<>(draftDetailsListResponseEntity,HttpStatus.ACCEPTED);
 			}else {
 				throw new MessageBodyConstraintViolationException("Draft Details are not available.");
 			}
@@ -233,59 +259,62 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public Boolean deleteAllDetails(Integer id) { // delete all stock details for stock log // pass stock log id
+	public ResponseEntity<?> deleteAllDetails(Integer id) { // delete all stock details for stock log // pass stock log id
 		
 		boolean isExist = draftLogRepository.existsById(id);
 		if (isExist) {
 			Optional<DraftLog> optional = draftLogRepository.findById(id);
 			if (optional.isPresent()) {
 				Integer gotId = 0;
-				for (int i = 0; i < optional.get().getDraftDetails().size(); i++) {
-//					gotId = optional.get().getDraftDetails().get(i).getId();
+				optional.get().getDraftDetails().stream()
+						.forEach(draftDetails -> draftDetailsRepository.deleteById(draftDetails.getId()));
+//				for (int i = 0; i < optional.get().getDraftDetails().size(); i++) {
+////					gotId = optional.get().getDraftDetails().get(i).getId();
+//
+//					System.out.println("sdasfdfsd  " + gotId);
+//					draftDetailsRepository.deleteById(gotId);
+////					(optional.get().getStockDetails().get(i));
+//				}
 
-					System.out.println("sdasfdfsd  " + gotId);
-					draftDetailsRepository.deleteById(gotId);
-//					(optional.get().getStockDetails().get(i));
-				}
 
 			}
-			return true;
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
 		}
 	}
 
 	@Override
-	public Boolean saveToMaster(Integer id) { // fetch all draft log entry details and push it as a new entry to stock
+	public ResponseEntity<?> saveToMaster(SaveToMasterEntity saveToMasterEntity) { // fetch all draft log entry details and push it as a new entry to stock
 												// log and delete if existing draft log
-		boolean isExist = draftLogRepository.existsById(id);
+		boolean isExist = draftLogRepository.existsById(saveToMasterEntity.getId());
 		System.out.println(isExist);
 		if (isExist) {
-			Optional<DraftLog> optional = draftLogRepository.findById(id);
+			Optional<DraftLog> optional = draftLogRepository.findById(saveToMasterEntity.getId());
 			DraftLog draftLog = optional.get();
+
 			Stock stock = new Stock();
 			stock.setDate(draftLog.getDate());
 			stock.setReason(draftLog.getReason());
 			stock.setUserId(draftLog.getUserId());
-			List<StockDetails> stockDetails = new ArrayList<StockDetails>();
+			stock.setAuthorizedUserId(saveToMasterEntity.getAuthorizedUserId());
+			List<StockDetails> stockDetails ; // = new ArrayList<StockDetails>();
+			stockDetails = draftLog.getDraftDetails().stream()
+					.map(draftDetails -> new StockDetails(draftDetails.getQuantity(),
+							draftDetails.getBatchId(),draftDetails.getItemCode(),stock))
+					.collect(Collectors.toList());
 
-			for (int i = 0; i < draftLog.getDraftDetails().size(); i++) {
-				StockDetails details = new StockDetails();
-//				details.setBrandId(draftLog.getDraftDetails().get(i).getBrandId());
-//				details.setItemId(draftLog.getDraftDetails().get(i).getItemId());
-				details.setQuantity(draftLog.getDraftDetails().get(i).getQuantity());
-//				details.setUomId(draftLog.getDraftDetails().get(i).getUomId());
-				stockDetails.add(details);
-			}
 			stock.setStockDetails(stockDetails);
 
-			for (StockDetails details : stock.getStockDetails()) {
-				details.setStock(stock);
-
-			}
 			stockRepository.save(stock);
-			draftLogRepository.deleteById(id);
-			return true;
+			draftLogRepository.deleteById(saveToMasterEntity.getId());
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPOST());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
 		} else {
 			throw new MessageBodyConstraintViolationException("Stock details entry not available.");
 		}
@@ -497,19 +526,19 @@ public class StockServiceImpl implements StockService {
 				stock.setReason(lastOpenStock.getReason());
 				stock.setUserId(lastOpenStock.getUserId());
 				
-				if(lastOpenStock.getStockDetails().get(j).getItemId() == itemId  ) {
-//						&& lastOpenStock.getStockDetails().get(j).getUomId() == uomId 
-//						&& lastOpenStock.getStockDetails().get(j).getBrandId() == brandId ) {
-//					Stock stock  = new Stock();
-					List<StockDetails> details = new ArrayList<StockDetails>();
-//					stock.setId(lastOpenStock.getId());
-//					stock.setDate(lastOpenStock.getDate());
-//					stock.setReason(lastOpenStock.getReason());
-//					stock.setUserId(lastOpenStock.getUserId());
-					details.add(lastOpenStock.getStockDetails().get(j));
-					stock.setStockDetails(details);
-					
-				}
+//				if(lastOpenStock.getStockDetails().get(j).getItemId() == itemId  ) {
+////						&& lastOpenStock.getStockDetails().get(j).getUomId() == uomId
+////						&& lastOpenStock.getStockDetails().get(j).getBrandId() == brandId ) {
+////					Stock stock  = new Stock();
+//					List<StockDetails> details = new ArrayList<StockDetails>();
+////					stock.setId(lastOpenStock.getId());
+////					stock.setDate(lastOpenStock.getDate());
+////					stock.setReason(lastOpenStock.getReason());
+////					stock.setUserId(lastOpenStock.getUserId());
+//					details.add(lastOpenStock.getStockDetails().get(j));
+//					stock.setStockDetails(details);
+//
+//				}
 				
 			}
 			

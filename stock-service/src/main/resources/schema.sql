@@ -16,7 +16,7 @@ create table CurrentStock (
 create table DraftDetails (
         id integer not null auto_increment,
        	batchId varchar(255) not null,
-	itemCode varchar(255) not null,
+	    itemCode varchar(255) not null,
        
         quantity double precision not null,
         
@@ -33,14 +33,17 @@ create table DraftLog (
 create table Stock (
        id integer not null auto_increment,
         date datetime,
-        reason varchar(255) not null,
+        authorizedUserId integer not null,
         userId integer not null,
+        reason varchar(255) not null,
+
         primary key (id)
     ); 
 create table StockDetails (
-       id integer not null auto_increment,
+        id integer not null auto_increment,
        
-        itemId integer not null,
+        batchId varchar(255) not null,
+        itemCode varchar(255) not null,
         quantity double precision not null,
         
         OSid integer,

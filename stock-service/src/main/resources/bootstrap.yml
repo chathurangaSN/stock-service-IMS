@@ -6,7 +6,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
   instance:
-    instance-id: ${spring.application.name}-${random.int} 
+    instance-id: ${spring.application.name}-${random.int}
     hostname: localhost
 server:
   port: 8080
