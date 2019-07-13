@@ -6,22 +6,24 @@ drop table if exists StockDetails;
 drop table if exists TransactionDetails;
 drop table if exists TransactionLog;
 create table CurrentStock (
-       id integer not null auto_increment,
-        brandId integer,
-        itemId integer,
+        id integer not null auto_increment,
+--         brandId integer,
+--         itemId integer,
+        batchId varchar(255) not null,
+	      itemCode varchar(255) not null,
         quantity double precision,
-        uomId integer,
+--         uomId integer,
         primary key (id)
     ); 
 create table DraftDetails (
         id integer not null auto_increment,
        	batchId varchar(255) not null,
-	    itemCode varchar(255) not null,
+	      itemCode varchar(255) not null,
        
         quantity double precision not null,
         
         OSid integer,
-      primary key (id)
+        primary key (id)
     ); 
 create table DraftLog (
        id integer not null auto_increment,
@@ -51,15 +53,17 @@ create table StockDetails (
     );
 create table TransactionDetails (
        id integer not null auto_increment,
-        brandId integer,
-        itemId integer,
+--         brandId integer,
+--         itemId integer,
+        batchId varchar(255) not null,
+	      itemCode varchar(255) not null,
         quantity double precision,
-        uomId integer,
+--         uomId integer,
         transactionLogId integer,
         primary key (id)
     ); 
 create table TransactionLog (
-       id integer not null auto_increment,
+        id integer not null auto_increment,
         date datetime,
         type varchar(255),
         userId varchar(255),

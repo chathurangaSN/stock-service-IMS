@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(MessageBodyConstraintViolationException.class)
     public ResponseEntity<?> serviceException(MessageBodyConstraintViolationException e){
-        responseValues.setStatus(responseMessages.getResponseSuccess());
+        responseValues.setStatus(responseMessages.getResponseFailed());
         responseValues.setMessage(e.getMessage());
         responseValues.setCode("#1200003");
         return new ResponseEntity<>(responseValues,HttpStatus.INTERNAL_SERVER_ERROR);

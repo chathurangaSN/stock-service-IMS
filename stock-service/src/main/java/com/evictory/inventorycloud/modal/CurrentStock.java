@@ -11,40 +11,56 @@ public class CurrentStock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private Integer itemId;
-	private Integer uomId;
-	private Integer brandId;
+//	private Integer itemId;
+//	private Integer uomId;
+//	private Integer brandId;
 	private Double quantity;
+	private String itemCode;
+	private String batchId;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getItemId() {
-		return itemId;
-	}
-	public void setItemId(Integer itemId) {
-		this.itemId = itemId;
-	}
-	public Integer getUomId() {
-		return uomId;
-	}
-	public void setUomId(Integer uomId) {
-		this.uomId = uomId;
-	}
-	public Integer getBrandId() {
-		return brandId;
-	}
-	public void setBrandId(Integer brandId) {
-		this.brandId = brandId;
-	}
+//	public Integer getItemId() {
+//		return itemId;
+//	}
+//	public void setItemId(Integer itemId) {
+//		this.itemId = itemId;
+//	}
+//	public Integer getUomId() {
+//		return uomId;
+//	}
+//	public void setUomId(Integer uomId) {
+//		this.uomId = uomId;
+//	}
+//	public Integer getBrandId() {
+//		return brandId;
+//	}
+//	public void setBrandId(Integer brandId) {
+//		this.brandId = brandId;
+//	}
 	public Double getQuantity() {
 		return quantity;
 	}
 	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
-	
-	
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
 }

@@ -241,22 +241,24 @@ public class StockController {
 	@RequestMapping(value = "/openstock/master/{date}/date", method = RequestMethod.GET) // fetch permanent added stock entries
 	// with details by id
 	public ResponseEntity<?> fetchMasterLastEntry(@PathVariable String date) { // stock log id
-		Stock stock = null;
-//		String date1 = "2019-05-25";
-		stock = stockService.fetchMasterLastEntry(date);
-		
-		if (stock == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-		} else {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-		}
+
+		return stockService.fetchMasterLastEntry(date);
+//		Stock stock = null;
+////		String date1 = "2019-05-25";
+//		stock = stockService.fetchMasterLastEntry(date);
+//
+//		if (stock == null) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
+//		} else {
+//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
+//		}
 
 	}
 	
-	@RequestMapping(value = "/openstock/master/{itemId}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/openstock/master/stockmovement/{itemId}", method = RequestMethod.GET)
 	// fetch Stock Movement Report // {brandId}/{itemId}/{uomId}
 	
-	public ResponseEntity<?> fetchStockMovement( @PathVariable Integer itemId) { 
+	public ResponseEntity<?> fetchStockMovement( @PathVariable String itemId) {
 //			,@PathVariable Integer uomId, @PathVariable Integer brandId) { 
 		
 			return stockService.fetchStockMovementReport(itemId);//, uomId, brandId

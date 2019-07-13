@@ -39,9 +39,9 @@ public interface StockService {
 	ResponseEntity<?> fetchAllMaster(); // fetch all permanent added stock entries with details
 
 	ResponseEntity<?> fetchMaster(Integer id); // fetch  permanent added stock entries with details by id
+
+	ResponseEntity<?> fetchMasterLastEntry(String date); // fetch  the last entry on open stock by date
 	
-	Stock fetchMasterLastEntry(String date); // fetch  the last entry on open stock by date 
-	
-	ResponseEntity<?> fetchStockMovementReport(Integer itemId); //,Integer uomId,Integer brandId
+	ResponseEntity<?> fetchStockMovementReport(String itemId); //,Integer uomId,Integer brandId
 
 }

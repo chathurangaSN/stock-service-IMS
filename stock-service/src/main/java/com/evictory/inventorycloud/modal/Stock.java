@@ -50,6 +50,18 @@ public class Stock {
 		this.stockDetails = stockDetails;
 	}
 
+	public Stock(Integer id, ZonedDateTime date,
+				 Integer authorizedUserId, Integer userId, String reason,
+				 List<StockDetails> stockDetails) {
+
+		this.id = id;
+		this.date = date;
+		this.authorizedUserId = authorizedUserId;
+		this.userId = userId;
+		this.reason = reason;
+		this.stockDetails = stockDetails;
+	}
+
 	public Integer getId() {
 		return id;
 	}

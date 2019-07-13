@@ -58,7 +58,12 @@ public class TransactionLogServiceImpl implements TransactionLogService {
 			String type = "";
 			for (TransactionDetails transactiondetail : transactiondetails) {
 				for (CurrentStock currentStock : currentStocks) {
-					if(transactiondetail.getUomId() == currentStock.getUomId() && transactiondetail.getItemId() == currentStock.getItemId() && transactiondetail.getBrandId() == currentStock.getBrandId()) {
+//					if(transactiondetail.getUomId() == currentStock.getUomId()
+//							&& transactiondetail.getItemId() == currentStock.getItemId()
+//							&& transactiondetail.getBrandId() == currentStock.getBrandId())
+						if(transactiondetail.getItemCode() == currentStock.getItemCode()
+								&& transactiondetail.getBatchId() == currentStock.getBatchId())
+					{
 						for(TransactionLog tlogs : transactionlogs) {
 							if(tlogs.getId() == transactiondetail.getTransactionlog().getId()) {
 								type = tlogs.getType();
@@ -105,18 +110,23 @@ public class TransactionLogServiceImpl implements TransactionLogService {
 
 				Optional<CurrentStock> currentStockoptional = Optional.empty();
 				for (CurrentStock currentStock : currentStocks) {
-					if (currentStock.getItemId() == transactionDetails.getItemId()
-							&& currentStock.getUomId() == transactionDetails.getUomId()
-							&& currentStock.getBrandId() == transactionDetails.getBrandId()) {
+//					if (currentStock.getItemId() == transactionDetails.getItemId()
+//							&& currentStock.getUomId() == transactionDetails.getUomId()
+//							&& currentStock.getBrandId() == transactionDetails.getBrandId())
+					if(currentStock.getItemCode() == transactionDetails.getItemCode()
+							&& currentStock.getBatchId() == transactionDetails.getBatchId())
+					{
 						currentStockoptional = Optional.of(currentStock);
 					}
 				}
 				if (currentStocks == null || currentStocks.size() == 0) {
 					if (transactionLog.getType().equals(recieve)) {
 						CurrentStock currentStock = new CurrentStock();
-						currentStock.setItemId(transactionDetails.getItemId());
-						currentStock.setUomId(transactionDetails.getUomId());
-						currentStock.setBrandId(transactionDetails.getBrandId());
+//						currentStock.setItemId(transactionDetails.getItemId());
+//						currentStock.setUomId(transactionDetails.getUomId());
+//						currentStock.setBrandId(transactionDetails.getBrandId());
+						currentStock.setBatchId(transactionDetails.getBatchId());
+						currentStock.setItemCode(transactionDetails.getItemCode());
 						currentStock.setQuantity(transactionDetails.getQuantity());
 						currentStockRepository.save(currentStock);
 					} else if(transactionLog.getType().equals(issue)){
@@ -149,9 +159,12 @@ public class TransactionLogServiceImpl implements TransactionLogService {
 				else {
 					if (transactionLog.getType().equals(recieve)) {
 						CurrentStock currentStockNew = new CurrentStock();
-						currentStockNew.setItemId(transactionDetails.getItemId());
-						currentStockNew.setUomId(transactionDetails.getUomId());
-						currentStockNew.setBrandId(transactionDetails.getBrandId());
+//						currentStockNew.setItemId(transactionDetails.getItemId());
+//						currentStockNew.setUomId(transactionDetails.getUomId());
+//						currentStockNew.setBrandId(transactionDetails.getBrandId());
+						currentStockNew.setBatchId(transactionDetails.getBatchId());
+						currentStockNew.setItemCode(transactionDetails.getItemCode());
+						currentStockNew.setQuantity(transactionDetails.getQuantity());
 						currentStockNew.setQuantity(transactionDetails.getQuantity());
 						currentStockRepository.save(currentStockNew);
 					} else if(transactionLog.getType().equals(issue)){
