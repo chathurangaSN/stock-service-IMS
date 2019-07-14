@@ -5,6 +5,19 @@ drop table if exists Stock;
 drop table if exists StockDetails;
 drop table if exists TransactionDetails;
 drop table if exists TransactionLog;
+drop table if exists Batch;
+
+create table Batch (
+        id integer not null auto_increment,
+        expireDate date,
+        manufactureDate date,
+        number integer,
+        receivedDate date,
+        salesPrice float not null,
+        unitePrice float not null,
+        primary key (id)
+    );
+
 create table CurrentStock (
         id integer not null auto_increment,
 --         brandId integer,

@@ -13,17 +13,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.evictory.inventorycloud.modal.*;
+import com.evictory.inventorycloud.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.evictory.inventorycloud.exception.MessageBodyConstraintViolationException;
-import com.evictory.inventorycloud.repository.CurrentStockRepository;
-import com.evictory.inventorycloud.repository.DraftDetailsRepository;
-import com.evictory.inventorycloud.repository.DraftLogRepository;
-import com.evictory.inventorycloud.repository.StockRepository;
-import com.evictory.inventorycloud.repository.TransactionLogRepository;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -66,6 +62,15 @@ public class StockServiceImpl implements StockService {
 
 	@Autowired
 	StockMovementResponse stockMovementResponse;
+
+	@Autowired
+	BatchRepository batchRepository;
+
+	@Autowired
+	BatchListResponseEntity batchListResponseEntity;
+
+	@Autowired
+	BatchResponseEntity batchResponseEntity;
 
 	@Override
 	public ResponseEntity<?> saveAll(DraftLog draftLog) { // save all stock details with log
@@ -704,6 +709,101 @@ public class StockServiceImpl implements StockService {
 //		
 //		return DraftLogResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
-	
+
+	@Override
+	public ResponseEntity<?> saveBatch(Batch batch) {
+		if (batch == null) {
+			throw new MessageBodyConstraintViolationException("Response body is empty");
+		} else {
+
+			batchRepository.save(batch);
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPOST());
+			responseValues.setCode("#0000001");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchAllBatch() {
+
+		List<Batch> batches = batchRepository.findAll();
+		if(batches== null || batches.toString().equals("[]")){
+			responseValues.setStatus(responseMessages.getResponseFailed());
+			responseValues.setMessage(responseMessages.getMessageFailedGET());
+			responseValues.setCode("#1200000");
+			return new ResponseEntity<>(responseValues,HttpStatus.BAD_REQUEST);
+		}else {
+			batchListResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			batchListResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			batchListResponseEntity.setCode("#0000002");
+			batchListResponseEntity.setBatches(batches);
+			return new ResponseEntity<>(batchListResponseEntity,HttpStatus.ACCEPTED);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> fetchBatchById(Integer id) {
+
+		boolean isExist = batchRepository.existsById(id);
+		if (isExist) {
+//			System.out.println("have");
+			Optional<Batch> optional = batchRepository.findById(id);
+			Batch batch = optional.get();
+
+			batchResponseEntity.setStatus(responseMessages.getResponseSuccess());
+			batchResponseEntity.setMessage(responseMessages.getMessageSuccessGET());
+			batchResponseEntity.setCode("#0000002");
+			batchResponseEntity.setBatche(batch);
+			return new ResponseEntity<>(batchResponseEntity,HttpStatus.ACCEPTED);
+
+		} else {
+			throw new MessageBodyConstraintViolationException("Batch log entry not available.");
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> updateBatch(Integer id, Batch batch) {
+		boolean isExist = batchRepository.existsById(id);
+		if (isExist) {
+			Optional<Batch> optional = batchRepository.findById(id);
+			Batch update = optional.get();
+			update.setExpireDate(batch.getExpireDate());
+			update.setManufactureDate(batch.getManufactureDate());
+			update.setNumber(batch.getNumber());
+			update.setReceivedDate(batch.getReceivedDate());
+			update.setSalesPrice(batch.getSalesPrice());
+			update.setSalesPrice(batch.getSalesPrice());
+
+			batchRepository.save(update);
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessPUT());
+			responseValues.setCode("#0000003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
+		} else {
+			throw new MessageBodyConstraintViolationException("Batch log entry not available.");
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> deleteBatch(Integer id) {
+
+		boolean isExist = batchRepository.existsById(id);
+		if (isExist) {
+			System.out.println("have");
+			batchRepository.deleteById(id);
+
+			responseValues.setStatus(responseMessages.getResponseSuccess());
+			responseValues.setMessage(responseMessages.getMessageSuccessDELETE());
+			responseValues.setCode("#1200003");
+			return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+
+		} else {
+			throw new MessageBodyConstraintViolationException("Batch log entry not available.");
+		}
+
+	}
+
 
 }

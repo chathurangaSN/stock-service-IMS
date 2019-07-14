@@ -7,7 +7,7 @@ import java.util.List;
 import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
-import com.evictory.inventorycloud.modal.SaveToMasterEntity;
+import com.evictory.inventorycloud.modal.*;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.evictory.inventorycloud.exception.MessageBodyConstraintViolationException;
-import com.evictory.inventorycloud.modal.DraftLog;
-import com.evictory.inventorycloud.modal.Stock;
-import com.evictory.inventorycloud.modal.DraftDetails;
 import com.evictory.inventorycloud.service.StockService;
 
 @RestController
@@ -33,28 +30,11 @@ public class StockController {
 	@Autowired
 	StockService stockService;
 
-	public final String responseSuccess = "Success";
-	public final String responseFailed = "Failed";
-	public final String messageSuccessPOST = "Succesfully added into database.";
-	public final String messageFailedPOST = "Failed to add values into database.";
-	public final String messageSuccessGET = "Succesfully withdrawed from database.";
-	public final String messageFailedGET = "Failed to withdraw from database.";
-	public final String messageSuccessPUT = "Succesfully updated database.";
-	public final String messageFailedPUT = "Failed to update database.";
-	public final String messageSuccessDELETE = "Succesfully delete from database.";
-	public final String messageFailedDELETE = "Failed to Delete from database.";
-
 	@RequestMapping(value = "/openstock/draft", method = RequestMethod.POST) // create Draft log with all its respective
 																				// details
 	public ResponseEntity<?> saveAll(@Valid @RequestBody DraftLog draftLog) {
 
 		return stockService.saveAll(draftLog);
-
-//		if () {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-//		}
 
 	}
 
@@ -63,27 +43,13 @@ public class StockController {
 	public ResponseEntity<?> fetchAll() {
 
 		return stockService.fetchAll();
-
-//		System.out.println("Insude the get method");
-//		List<DraftLog> openStocks = stockService.fetchAll();
-//		if (openStocks == null || openStocks.size() == 0) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-//		} else {
-//			return ResponseEntity.ok(openStocks);
-//		}
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry", method = RequestMethod.POST) // create a new Draft log only
 	public ResponseEntity<?> saveEntry(@RequestBody DraftLog draftLog) {
 
 		return stockService.saveEntry(draftLog);
-//
-//		draftLog.setDate(ZonedDateTime.now(ZoneId.of("UTC-4")));
-//		if (stockService.saveEntry(draftLog)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-//		}
+
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry/{id}", method = RequestMethod.PUT) // update existing Draft details
@@ -91,23 +57,13 @@ public class StockController {
 	public ResponseEntity<?> updateEntry(@PathVariable Integer id, @RequestBody DraftLog draftLog) { // open Draft log
 																										// id
 		return stockService.updateEntry(id, draftLog);
-//
-//		if (stockService.updateEntry(id, draftLog)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
-//		}
+
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry/{id}", method = RequestMethod.GET) // fetch a Draft log by id
 	public ResponseEntity<?> fetchEntry(@PathVariable Integer id) {
 
 		return stockService.fetchEntry(id);
-//		if (draftLog == null) {
-//			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
-//		}
-//		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftLog);
-
 	}
 
 	@RequestMapping(value = "/openstock/draft/entry/{id}", method = RequestMethod.DELETE) // delete existing Draft log
@@ -115,13 +71,6 @@ public class StockController {
 	public ResponseEntity<?> deleteEntry(@PathVariable Integer id) {
 
 		return stockService.deleteEntry(id);
-//		if (stockService.deleteEntry(id)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-//		}
-
 	}
 
 	// create a new open Draft detail entry for an existing Draft log
@@ -129,32 +78,14 @@ public class StockController {
 	public ResponseEntity<?> saveDetails(@PathVariable Integer id, @RequestBody DraftDetails draftDetails) {
 
 		return stockService.saveDetails(id, draftDetails);
-//		if (stockService.saveDetails(id, draftDetails)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-//		}
 	}
 
 	// update existing Draft details entry
 	@RequestMapping(value = "/openstock/draft/details/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDetails(@Valid @PathVariable Integer id, @RequestBody DraftDetails details) {
-//		int id;
-//		if (!NumberUtils.isCreatable(sid)) {
-//			throw new RuntimeException("ID should be an Interger");
-//		} else {
-//			id = Integer.valueOf(sid);
-//		}
 
 		return stockService.updateDetails(id, details);
-//
-//		if (stockService.updateDetails(id, details)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "PUT"));
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "PUT"));
-//		}
+
 	}
 
 	// delete existing Draft details entry
@@ -162,12 +93,6 @@ public class StockController {
 	public ResponseEntity<?> deleteDetails(@PathVariable Integer id) {
 
 		return stockService.deleteDetails(id);
-//		if (stockService.deleteDetails(id)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-//		}
 	}
 
 	// fetch all Draft details by Draft log by id
@@ -175,24 +100,12 @@ public class StockController {
 	public ResponseEntity<?> fetchAllDetails(@PathVariable Integer id) {
 
 		return stockService.fetchAllDetails(id);
-//		List<DraftDetails> draftDetails = stockService.fetchAllDetails(id);
-////		if (draftDetails == null) {
-////			throw new MessageBodyConstraintViolationException("Stock log entry not available.");
-////		}
-//		return ResponseEntity.status(HttpStatus.ACCEPTED).body(draftDetails);
-
 	}
 	// delete all details of draft details by draft log id
 	@RequestMapping(value = "/openstock/draft/detailsAll/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteAllDetails(@PathVariable Integer id) {
 
 		return stockService.deleteAllDetails(id);
-//		if (stockService.deleteAllDetails(id)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "DELETE"));
-//		} else {
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "DELETE"));
-//		}
 	}
 
 	// fetch all draft log entry details and push it as a new entry to stock log and
@@ -201,12 +114,6 @@ public class StockController {
 	public ResponseEntity<?> saveToMaster(@RequestBody SaveToMasterEntity saveToMasterEntity ) { // draft log id
 
 		return stockService.saveToMaster(saveToMasterEntity);
-//		if (stockService.saveToMaster(id)) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(oncall(true, "POST"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "POST"));
-//		}
-
 	}
 
 	@RequestMapping(value = "/openstock/master", method = RequestMethod.GET) // fetch all permanent added stock entries
@@ -214,14 +121,6 @@ public class StockController {
 	public ResponseEntity<?> fetchAllMaster() { // stock log id
 
 		return stockService.fetchAllMaster();
-//		List<Stock> stock = stockService.fetchAllMaster();
-//
-//		if (stock == null) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(true, "GET"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-//		}
-
 	}
 
 	@RequestMapping(value = "/openstock/master/{id}", method = RequestMethod.GET) // fetch permanent added stock entries
@@ -229,13 +128,6 @@ public class StockController {
 	public ResponseEntity<?> fetchMaster(@PathVariable Integer id) { // stock log id
 
 		return stockService.fetchMaster(id);
-//		Stock stock = stockService.fetchMaster(id);
-//		if (stock == null) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-//		}
-
 	}
 
 	@RequestMapping(value = "/openstock/master/{date}/date", method = RequestMethod.GET) // fetch permanent added stock entries
@@ -243,16 +135,6 @@ public class StockController {
 	public ResponseEntity<?> fetchMasterLastEntry(@PathVariable String date) { // stock log id
 
 		return stockService.fetchMasterLastEntry(date);
-//		Stock stock = null;
-////		String date1 = "2019-05-25";
-//		stock = stockService.fetchMasterLastEntry(date);
-//
-//		if (stock == null) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(oncall(false, "GET"));
-//		} else {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED).body(stock);
-//		}
-
 	}
 	
 	@RequestMapping(value = "/openstock/master/stockmovement/{itemId}", method = RequestMethod.GET)
@@ -261,65 +143,39 @@ public class StockController {
 	public ResponseEntity<?> fetchStockMovement( @PathVariable String itemId) {
 //			,@PathVariable Integer uomId, @PathVariable Integer brandId) { 
 		
-			return stockService.fetchStockMovementReport(itemId);//, uomId, brandId
+		return stockService.fetchStockMovementReport(itemId);//, uomId, brandId
 
 	}
 
-	public Response oncall(boolean ifsuccess, String type) {
-		Response response = new Response();
-		String messagefailed = "";
-		String messagesuccess = "";
-		switch (type) {
-		case "POST":
-			messagefailed = messageFailedPOST;
-			messagesuccess = messageSuccessPOST;
-			break;
-		case "GET":
-			messagefailed = messageFailedGET;
-			messagesuccess = messageSuccessGET;
-			break;
-		case "PUT":
-			messagefailed = messageFailedPUT;
-			messagesuccess = messageSuccessPUT;
-			break;
-		case "DELETE":
-			messagefailed = messageFailedDELETE;
-			messagesuccess = messageSuccessDELETE;
-			break;
-		default:
-			break;
-		}
-		if (ifsuccess) {
-			response.setResponse(responseSuccess);
-			response.setMessage(messagesuccess);
-		} else {
-			response.setResponse(responseFailed);
-			response.setMessage(messagefailed);
-		}
-
-		return response;
-	}
-
-	class Response {
-
-		private String response;
-		private String message;
-
-		public String getResponse() {
-			return response;
-		}
-
-		public void setResponse(String response) {
-			this.response = response;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
+	@RequestMapping(value = "/batch", method = RequestMethod.GET)
+	public ResponseEntity<?> fetchBatch( ) {
+		return stockService.fetchAllBatch();
 
 	}
+
+	@RequestMapping(value = "/batch", method = RequestMethod.POST)
+	public ResponseEntity<?> saveBatchDetails( @RequestBody Batch batch) {
+		return stockService.saveBatch(batch);
+
+	}
+
+	@RequestMapping(value = "/batch/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getBatchById(@PathVariable Integer id ) {
+		return stockService.fetchBatchById(id);
+
+	}
+
+	@RequestMapping(value = "/batch/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateBatchDetails(@PathVariable Integer id, @RequestBody Batch batch ) {
+		return stockService.updateBatch(id, batch);
+
+	}
+
+	@RequestMapping(value = "/batch/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteBatchDetails( @PathVariable Integer id) {
+		return stockService.deleteBatch(id);
+
+	}
+
+
 }

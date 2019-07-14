@@ -2,12 +2,8 @@ package com.evictory.inventorycloud.service;
 
 import java.util.List;
 
-import com.evictory.inventorycloud.modal.SaveToMasterEntity;
+import com.evictory.inventorycloud.modal.*;
 import org.springframework.http.ResponseEntity;
-
-import com.evictory.inventorycloud.modal.DraftLog;
-import com.evictory.inventorycloud.modal.Stock;
-import com.evictory.inventorycloud.modal.DraftDetails;
 
 public interface StockService {
 
@@ -44,4 +40,13 @@ public interface StockService {
 	
 	ResponseEntity<?> fetchStockMovementReport(String itemId); //,Integer uomId,Integer brandId
 
+	ResponseEntity<?> saveBatch(Batch batch);
+
+	ResponseEntity<?> fetchAllBatch();
+
+	ResponseEntity<?> fetchBatchById(Integer id);
+
+	ResponseEntity<?> updateBatch(Integer id,  Batch batch);
+
+	ResponseEntity<?> deleteBatch(Integer id);
 }
