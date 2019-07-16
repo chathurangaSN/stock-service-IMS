@@ -9,5 +9,5 @@ import java.time.ZonedDateTime;
 
 public interface StockRepository extends JpaRepository<Stock, Integer>{
 
-   Stock findbyDate(ZonedDateTime zonedDateTime);
+
 }
