@@ -513,10 +513,17 @@ public class StockServiceImpl implements StockService {
 			}
 		}
 		if(lastOpenStock == null) {
-			responseValues.setStatus(responseMessages.getResponseFailed());
-			responseValues.setMessage(responseMessages.getMessageFailedGET());
-			responseValues.setCode("#1200000");
-			return new ResponseEntity<>(responseValues,HttpStatus.BAD_REQUEST);
+//			responseValues.setStatus(responseMessages.getResponseFailed());
+//			responseValues.setMessage(responseMessages.getMessageFailedGET());
+//			responseValues.setCode("#1200000");
+//			return new ResponseEntity<>(responseValues,HttpStatus.BAD_REQUEST);
+			stockMovementResponse.setStatus(responseMessages.getResponseFailed());
+			stockMovementResponse.setMessage(responseMessages.getMessageFailedGET());
+			stockMovementResponse.setCode("#0000002");
+			stockMovementResponse.setStock(null);
+			stockMovementResponse.setTransactionLogsIssue(null);
+			stockMovementResponse.setTransactionLogsRecived(null);
+			return new ResponseEntity<>(stockMovementResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		ZonedDateTime lastOpenStockDate = lastOpenStock.getDate();
 	
@@ -689,11 +696,17 @@ public class StockServiceImpl implements StockService {
 		} catch (ParseException ex) {
 			ex.printStackTrace();
 		}
-
-		responseValues.setStatus(responseMessages.getResponseFailed());
-		responseValues.setMessage(responseMessages.getMessageFailedGET());
-		responseValues.setCode("#1200000");
-		return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
+		stockMovementResponse.setStatus(responseMessages.getResponseFailed());
+		stockMovementResponse.setMessage(responseMessages.getMessageFailedGET());
+		stockMovementResponse.setCode("#0000002");
+		stockMovementResponse.setStock(null);
+		stockMovementResponse.setTransactionLogsIssue(null);
+		stockMovementResponse.setTransactionLogsRecived(null);
+		return new ResponseEntity<>(stockMovementResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//		responseValues.setStatus(responseMessages.getResponseFailed());
+//		responseValues.setMessage(responseMessages.getMessageFailedGET());
+//		responseValues.setCode("#1200000");
+//		return new ResponseEntity<>(responseValues,HttpStatus.ACCEPTED);
 
 //		List<TransactionLog> transactionLogsIssue = new ArrayList<TransactionLog>();
 //		List<TransactionLog> transactionLogsRecived = new ArrayList<TransactionLog>();

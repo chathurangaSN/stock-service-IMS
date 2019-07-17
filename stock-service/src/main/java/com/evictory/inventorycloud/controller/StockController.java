@@ -137,13 +137,13 @@ public class StockController {
 		return stockService.fetchMasterLastEntry(date);
 	}
 	
-	@RequestMapping(value = "/openstock/master/stockmovement/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/openstock/master/stockmovement/{itemCode}", method = RequestMethod.GET)
 	// fetch Stock Movement Report // {brandId}/{itemId}/{uomId}
 	
-	public ResponseEntity<?> fetchStockMovement( @PathVariable String itemId) {
+	public ResponseEntity<?> fetchStockMovement( @PathVariable String itemCode) {
 //			,@PathVariable Integer uomId, @PathVariable Integer brandId) { 
 		
-		return stockService.fetchStockMovementReport(itemId);//, uomId, brandId
+		return stockService.fetchStockMovementReport(itemCode);//, uomId, brandId
 
 	}
 
